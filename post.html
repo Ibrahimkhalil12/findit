@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Item – FindIt | MAWTS Institute of Technology</title>
+  <meta name="description" content="Report a lost or found item at MAWTS Institute of Technology campus. Securely verify ownership with secret challenge questions.">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <div class="brand-wrapper">
+        <a href="index.html" style="display: flex; align-items: center; gap: 0.5rem;">
+          <img src="assets/logo.svg" alt="FindIt Logo" class="brand-logo-img">
+        </a>
+        <span class="brand-university-tag institution-short">MAWTS</span>
+      </div>
+
+      <nav aria-label="Main Navigation">
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="items.html" class="nav-link">Browse Items</a></li>
+          <li><a href="leaderboard.html" class="nav-link">Leaderboard</a></li>
+          <li><a href="post.html" class="nav-link active">Report Item</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle theme"></button>
+        <div id="nav-auth-actions" style="display: flex; align-items: center; gap: 0.5rem;"></div>
+        <button type="button" class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main style="padding: 3rem 0 5rem;">
+    <div class="container" style="max-width: 760px;">
+      <!-- Page Header -->
+      <div style="text-align: center; margin-bottom: 2.5rem;">
+        <div style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8125rem; font-weight: 700; color: var(--primary-600); text-transform: uppercase; margin-bottom: 0.35rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          New Campus Submission
+        </div>
+        <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">
+          Report a Belonging
+        </h1>
+        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.35rem;">
+          Submit details to help return misplaced items to members of <span class="institution-name">MAWTS Institute of Technology</span>.
+        </p>
+      </div>
+
+      <!-- Main Form Card -->
+      <div style="background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 2.5rem; box-shadow: var(--shadow-md);">
+        <!-- Form Feedback Alert -->
+        <div id="form-error-alert" style="display: none; background-color: var(--danger-bg); color: var(--danger-text); border: 1px solid var(--danger-border); border-radius: var(--radius-md); padding: 0.875rem 1rem; font-size: 0.875rem; margin-bottom: 1.5rem;"></div>
+
+        <form id="post-item-form" novalidate>
+          <!-- 1. Report Type Toggle -->
+          <div style="margin-bottom: 2rem;">
+            <label class="form-label" style="margin-bottom: 0.75rem;">What are you reporting?</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <label style="border: 2px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 0.75rem; cursor: pointer; transition: all var(--transition-fast);">
+                <input type="radio" name="item_type" value="lost" checked style="accent-color: var(--primary-600); width: 18px; height: 18px;">
+                <div>
+                  <div style="font-weight: 700; color: var(--text-primary);">Lost Item</div>
+                  <div style="font-size: 0.8125rem; color: var(--text-secondary);">I misplaced my personal belonging</div>
+                </div>
+              </label>
+
+              <label style="border: 2px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1rem; display: flex; align-items: center; gap: 0.75rem; cursor: pointer; transition: all var(--transition-fast);">
+                <input type="radio" name="item_type" value="found" style="accent-color: #10b981; width: 18px; height: 18px;">
+                <div>
+                  <div style="font-weight: 700; color: var(--text-primary);">Found Item</div>
+                  <div style="font-size: 0.8125rem; color: var(--text-secondary);">I found someone else's belonging</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- 2. Item Details -->
+          <div class="form-group">
+            <label class="form-label" for="item-title">Item Title <span style="color: var(--danger-btn);">*</span></label>
+            <input type="text" id="item-title" name="title" class="form-control" placeholder="e.g., Black Arctic Hunter Backpack, Casio fx-991EX Calculator" required>
+            <span class="form-hint">Be clear and descriptive. Avoid including sensitive private codes here.</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+            <!-- Category -->
+            <div class="form-group">
+              <label class="form-label" for="item-category">Category <span style="color: var(--danger-btn);">*</span></label>
+              <select id="item-category" name="category" class="form-select" required>
+                <option value="Bag">Bag / Backpack</option>
+                <option value="Phone">Phone / Electronics</option>
+                <option value="ID Card">Student ID Card / Smart Card</option>
+                <option value="Books">Books / Notes</option>
+                <option value="Keys">Keys / Keychain</option>
+                <option value="Other">Other Belonging</option>
+              </select>
+            </div>
+
+            <!-- Date -->
+            <div class="form-group">
+              <label class="form-label" for="item-date">Date Lost / Found <span style="color: var(--danger-btn);">*</span></label>
+              <input type="date" id="item-date" name="item_date" class="form-control" required>
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div class="form-group">
+            <label class="form-label" for="item-location">Campus Location <span style="color: var(--danger-btn);">*</span></label>
+            <input type="text" id="item-location" name="location" class="form-control" placeholder="e.g., Central Library 2nd Floor Study Hall, Computer Lab 3 Terminal 14" required>
+            <span class="form-hint">Specify room number, desk, or nearby landmark inside MAWTS campus.</span>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group">
+            <label class="form-label" for="item-description">Description <span style="color: var(--danger-btn);">*</span></label>
+            <textarea id="item-description" name="description" class="form-textarea" placeholder="Provide visible characteristics (color, brand, scratches, contents) to help identify the item..." required></textarea>
+          </div>
+
+          <!-- 3. Image Upload -->
+          <div class="form-group">
+            <label class="form-label">Item Photograph (Optional)</label>
+            
+            <div id="image-dropzone" style="border: 2px dashed var(--border-subtle); border-radius: var(--radius-lg); padding: 2rem 1.5rem; text-align: center; cursor: pointer; background-color: var(--bg-surface-alt); transition: border-color var(--transition-fast);">
+              <div style="color: var(--primary-600); margin-bottom: 0.5rem; display: flex; justify-content: center;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+              </div>
+              <div style="font-weight: 600; color: var(--text-primary); font-size: 0.9375rem;">Click to upload or drag & drop photograph</div>
+              <div style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.25rem;">Supported formats: JPEG, PNG, WEBP (Max size: 2 MB)</div>
+              <input type="file" id="image-input" accept="image/jpeg,image/png,image/webp,image/gif" style="display: none;">
+            </div>
+
+            <!-- Preview Container -->
+            <div id="image-preview-container" style="display: none; position: relative; margin-top: 1rem; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-subtle); max-width: 320px;">
+              <img id="image-preview-img" src="" alt="Selected image preview" style="width: 100%; height: 180px; object-fit: cover;">
+              <button type="button" id="btn-remove-image" class="btn btn-danger btn-sm" style="position: absolute; top: 8px; right: 8px; padding: 0.3rem 0.6rem;">
+                Remove
+              </button>
+            </div>
+
+            <div id="image-error-alert" style="display: none; color: var(--danger-btn); font-size: 0.8125rem; margin-top: 0.5rem;"></div>
+          </div>
+
+          <!-- 4. Found Item Verification Challenge Section (Visible when 'Found' is active) -->
+          <div id="found-verification-section" style="display: none; background: linear-gradient(135deg, var(--bg-surface-alt) 0%, var(--bg-app) 100%); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.5rem; margin-top: 2rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; color: #047857; font-weight: 700; font-size: 0.875rem; text-transform: uppercase; margin-bottom: 0.5rem;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+              Found Item Ownership Challenge
+            </div>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.25rem;">
+              To protect the owner and prevent wrongful claims, set a secret question only the true owner can answer. Your contact information remains strictly hidden until the claimant answers correctly.
+            </p>
+
+            <div class="form-group">
+              <label class="form-label" for="verify-question">Secret Verification Question <span style="color: var(--danger-btn);">*</span></label>
+              <input type="text" id="verify-question" class="form-control" placeholder="e.g., What is the lock-screen wallpaper, or what sticker is on the back?">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="verify-answer">Expected Secret Answer <span style="color: var(--danger-btn);">*</span></label>
+              <input type="text" id="verify-answer" class="form-control" placeholder="e.g., Anime character, yellow star sticker, student roll 0084">
+              <span class="form-hint" style="color: var(--primary-600); font-weight: 500;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; vertical-align: middle;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Secure: This answer will be hashed with Bcrypt inside the database. It is never stored in plain text.
+              </span>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div style="margin-top: 2.5rem;">
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+              Publish Report
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 FindIt – <span class="institution-name">MAWTS Institute of Technology</span>. All rights reserved.
+        </div>
+        <div>
+          Group 3 Portal • Supervisor: <span class="footer-supervisor">Joy Debnath</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase JS SDK via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Core Configuration & Application Scripts -->
+  <script src="config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/post.js"></script>
+</body>
+</html>

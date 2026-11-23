@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Listings – FindIt | MAWTS Institute of Technology</title>
+  <meta name="description" content="Search and filter active campus lost and found belongings at MAWTS Institute of Technology. Filter by category, location, date, or type.">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <div class="brand-wrapper">
+        <a href="index.html" style="display: flex; align-items: center; gap: 0.5rem;">
+          <img src="assets/logo.svg" alt="FindIt Logo" class="brand-logo-img">
+        </a>
+        <span class="brand-university-tag institution-short">MAWTS</span>
+      </div>
+
+      <nav aria-label="Main Navigation">
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="items.html" class="nav-link active">Browse Items</a></li>
+          <li><a href="leaderboard.html" class="nav-link">Leaderboard</a></li>
+          <li><a href="post.html" class="nav-link">Report Item</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle theme"></button>
+        <div id="nav-auth-actions" style="display: flex; align-items: center; gap: 0.5rem;"></div>
+        <button type="button" class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main style="padding: 2.5rem 0 4rem;">
+    <div class="container">
+      <!-- Page Header -->
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <div style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.8125rem; font-weight: 700; color: var(--primary-600); text-transform: uppercase; margin-bottom: 0.35rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            Campus Directory
+          </div>
+          <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">
+            Lost & Found Listings
+          </h1>
+          <p style="color: var(--text-secondary); font-size: 0.9375rem; margin-top: 0.25rem;">
+            Real-time reports across <span class="institution-name">MAWTS Institute of Technology</span> campus.
+          </p>
+        </div>
+
+        <a href="post.html" class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          Post New Item
+        </a>
+      </div>
+
+      <!-- Filters & Search Toolbar -->
+      <div style="background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm);">
+        <!-- Top Row: Search and Type Tabs -->
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+          <!-- Search input -->
+          <div style="flex: 1 1 320px; position: relative; display: flex; align-items: center;">
+            <span style="position: absolute; left: 14px; color: var(--text-muted); display: flex;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </span>
+            <input type="text" id="filter-search" class="form-control" placeholder="Search by title, description or location..." style="padding-left: 2.75rem;">
+          </div>
+
+          <!-- Type filter buttons -->
+          <div style="display: flex; background-color: var(--bg-surface-alt); padding: 0.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <button type="button" class="btn btn-sm filter-type-btn active" data-type="all" style="border: none; border-radius: var(--radius-sm);">All</button>
+            <button type="button" class="btn btn-sm filter-type-btn" data-type="lost" style="border: none; border-radius: var(--radius-sm);">Lost</button>
+            <button type="button" class="btn btn-sm filter-type-btn" data-type="found" style="border: none; border-radius: var(--radius-sm);">Found</button>
+          </div>
+        </div>
+
+        <!-- Bottom Row: Specific Multi-Filters -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto; gap: 1rem; align-items: flex-end;">
+          <!-- Category -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="filter-category" style="font-size: 0.8125rem;">Category</label>
+            <select id="filter-category" class="form-select">
+              <option value="all">All Categories</option>
+              <option value="Bag">Bag</option>
+              <option value="Phone">Phone / Electronics</option>
+              <option value="ID Card">ID Card</option>
+              <option value="Books">Books / Notebooks</option>
+              <option value="Keys">Keys</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <!-- Location -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="filter-location" style="font-size: 0.8125rem;">Location</label>
+            <input type="text" id="filter-location" class="form-control" placeholder="e.g. Library, Lab 3, Canteen">
+          </div>
+
+          <!-- Date -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="filter-date" style="font-size: 0.8125rem;">Item Date</label>
+            <input type="date" id="filter-date" class="form-control">
+          </div>
+
+          <!-- Sort -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="filter-sort" style="font-size: 0.8125rem;">Sort By</label>
+            <select id="filter-sort" class="form-select">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+            </select>
+          </div>
+
+          <!-- Clear Filters -->
+          <div style="margin-bottom: 0;">
+            <button type="button" id="btn-clear-filters" class="btn btn-outline" style="height: 42px;">
+              Clear Filters
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Count Header -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+        <div id="results-count" style="font-size: 0.875rem; font-weight: 600; color: var(--text-secondary);">
+          Loading listings...
+        </div>
+      </div>
+
+      <!-- Items Grid -->
+      <div id="items-container" class="items-grid">
+        <!-- Rendered dynamically by js/items.js -->
+      </div>
+
+      <!-- Load More Pagination Button -->
+      <div id="load-more-container" style="text-align: center; margin-top: 3rem; display: none;">
+        <button type="button" id="btn-load-more" class="btn btn-secondary btn-lg">
+          Load More Items
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 FindIt – <span class="institution-name">MAWTS Institute of Technology</span>. All rights reserved.
+        </div>
+        <div>
+          Group 3 Portal • Supervisor: <span class="footer-supervisor">Joy Debnath</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase JS SDK via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Core Configuration & Application Scripts -->
+  <script src="config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/items.js"></script>
+</body>
+</html>
