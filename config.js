@@ -9,7 +9,7 @@
  * NEVER expose the Supabase service_role key or database password in frontend code!
  */
 
-const CONFIG = {
+window.CONFIG = {
   // Institutional Settings (Easily Configurable)
   INSTITUTION_NAME: 'MAWTS Institute of Technology',
   INSTITUTION_SHORT: 'MAWTS',
@@ -31,8 +31,8 @@ const CONFIG = {
 
   // Supabase Configuration
   // Replace these with your actual Supabase Project Settings -> API credentials:
-  SUPABASE_URL: 'https://xyzcompany.supabase.co',
-  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.placeholder_anon_key',
+  SUPABASE_URL: 'https://czenrekvyxnqvszrqevm.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_vl09Si9U1rtYqrL8zhwi1w_qX2YncgE',
 
   // Storage Bucket
   STORAGE_BUCKET_NAME: 'item-images',
@@ -47,9 +47,9 @@ const CONFIG = {
   // Gamification Badges
   BADGE_TIERS: [
     { name: 'Campus Guardian Gold', minPoints: 300, icon: 'shield-check', color: '#f59e0b' },
-    { name: 'Silver Returner',      minPoints: 150, icon: 'award',        color: '#94a3b8' },
-    { name: 'Campus Helper',        minPoints: 50,  icon: 'star',         color: '#3b82f6' },
-    { name: 'Good Citizen',         minPoints: 0,   icon: 'user-check',   color: '#10b981' }
+    { name: 'Silver Returner', minPoints: 150, icon: 'award', color: '#94a3b8' },
+    { name: 'Campus Helper', minPoints: 50, icon: 'star', color: '#3b82f6' },
+    { name: 'Good Citizen', minPoints: 0, icon: 'user-check', color: '#10b981' }
   ],
 
   // Pagination
