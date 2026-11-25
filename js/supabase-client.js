@@ -82,6 +82,49 @@
       } catch (e) {
         return null;
       }
+    },
+
+    /**
+     * Fetch the signed-in user's profile (including role, phone, email)
+     */
+    async getProfile() {
+      if (!supabaseClient || !isConfigured) return null;
+      try {
+        const session = await this.getSession();
+        if (!session || !session.user) return null;
+
+        const { data, error } = await supabaseClient
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+
+        if (error || !data) return null;
+        return data;
+      } catch (e) {
+        return null;
+      }
+    },
+
+    /**
+     * Check whether the signed-in user has the 'admin' role
+     */
+    async isAdmin() {
+      if (!supabaseClient || !isConfigured) return false;
+      try {
+        const session = await this.getSession();
+        if (!session || !session.user) return false;
+
+        const { data, error } = await supabaseClient.rpc('is_admin');
+        if (!error && typeof data === 'boolean') {
+          return data;
+        }
+
+        const profile = await this.getProfile();
+        return Boolean(profile && profile.role === 'admin');
+      } catch (e) {
+        return false;
+      }
     }
   };
 

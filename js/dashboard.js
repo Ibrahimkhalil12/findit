@@ -31,6 +31,7 @@
     await loadUserProfile();
     await loadUserItems();
     await loadUserClaims();
+    await loadReceivedClaims();
   }
 
   // --------------------------------------------------------------------------
@@ -319,6 +320,59 @@
 
     } catch (err) {
       console.warn('[FindIt Claims Notice]', err);
+    }
+  }
+
+  async function loadReceivedClaims() {
+    const container = document.getElementById('received-claims-list');
+    if (!container) return;
+
+    try {
+      let received = [];
+
+      if (window.FindItDB && window.FindItDB.client && window.FindItDB.isConfigured()) {
+        const { data, error } = await window.FindItDB.client.rpc('get_claims_on_my_items');
+        if (!error && Array.isArray(data)) {
+          received = data;
+        }
+      }
+
+      container.innerHTML = '';
+
+      if (received.length === 0) {
+        container.appendChild(createEmptyState('No verified claimants yet on your Found reports. When an owner answers your secret question correctly, their contact details will appear here.'));
+        return;
+      }
+
+      received.forEach(c => {
+        const row = document.createElement('div');
+        row.style.cssText = 'background-color: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.1rem 1.25rem; margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;';
+
+        const info = document.createElement('div');
+        const titleEl = document.createElement('strong');
+        titleEl.textContent = c.item_title || 'Found Item';
+
+        const claimerLine = document.createElement('div');
+        claimerLine.style.cssText = 'font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.25rem;';
+        const phonePart = c.claimer_phone ? ` • Phone: ${c.claimer_phone}` : '';
+        const emailPart = c.claimer_email ? ` • Email: ${c.claimer_email}` : '';
+        claimerLine.textContent = `Verified Owner: ${c.claimer_name || 'Campus Member'}${phonePart}${emailPart}`;
+
+        const dateLine = document.createElement('div');
+        dateLine.style.cssText = 'font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;';
+        dateLine.textContent = `Verified on: ${window.FindIt.formatDate(c.verified_at || c.created_at)}`;
+
+        info.appendChild(titleEl);
+        info.appendChild(claimerLine);
+        info.appendChild(dateLine);
+
+        const badge = window.FindIt.createBadge(c.claim_status || 'verified', c.claim_status || 'verified');
+        row.appendChild(info);
+        row.appendChild(badge);
+        container.appendChild(row);
+      });
+    } catch (err) {
+      console.warn('[FindIt Received Claims Notice]', err);
     }
   }
 

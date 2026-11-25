@@ -42,23 +42,32 @@
       if (window.FindItDB && window.FindItDB.client && window.FindItDB.isConfigured()) {
         const client = window.FindItDB.client;
 
-        // Fetch counts from public_items
-        const { count: totalReported } = await client
-          .from('items')
-          .select('*', { count: 'exact', head: true });
+        let reportedCount = 0;
+        let returnedCount = 0;
+        let userCount = 0;
 
-        const { count: totalReturned } = await client
-          .from('items')
-          .select('*', { count: 'exact', head: true })
-          .eq('status', 'returned');
+        // Primary: safe SECURITY DEFINER aggregate RPC (works with hardened RLS)
+        const { data: statsData, error: statsErr } = await client.rpc('get_platform_stats');
 
-        const { count: totalProfiles } = await client
-          .from('profiles')
-          .select('*', { count: 'exact', head: true });
+        if (!statsErr && statsData) {
+          reportedCount = statsData.total_reported || 0;
+          returnedCount = statsData.total_returned || 0;
+          userCount = statsData.active_users || 0;
+        } else {
+          // Fallback: safe public_items view counts
+          const { count: totalReported } = await client
+            .from('public_items')
+            .select('*', { count: 'exact', head: true });
 
-        const reportedCount = totalReported || 0;
-        const returnedCount = totalReturned || 0;
-        const userCount = totalProfiles || 0;
+          const { count: totalReturned } = await client
+            .from('public_items')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'returned');
+
+          reportedCount = totalReported || 0;
+          returnedCount = totalReturned || 0;
+        }
+
         const rate = reportedCount > 0 ? Math.round((returnedCount / reportedCount) * 100) : 92;
 
         if (reportedEl) reportedEl.textContent = reportedCount > 0 ? reportedCount : '48+';

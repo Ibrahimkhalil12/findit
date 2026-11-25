@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Admin Portal – FindIt | MAWTS Institute of Technology</title>
+  <meta name="description" content="Central administration console for managing all campus Lost & Found reports, statuses, and ownership claims.">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <div class="brand-wrapper">
+        <a href="index.html" style="display: flex; align-items: center; gap: 0.5rem;">
+          <img src="assets/logo.svg" alt="FindIt Logo" class="brand-logo-img">
+        </a>
+        <span class="brand-university-tag institution-short">MAWTS</span>
+      </div>
+
+      <nav aria-label="Main Navigation">
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="items.html" class="nav-link">Browse Items</a></li>
+          <li><a href="leaderboard.html" class="nav-link">Leaderboard</a></li>
+          <li><a href="admin.html" class="nav-link active">Admin Portal</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle theme"></button>
+        <div id="nav-auth-actions" style="display: flex; align-items: center; gap: 0.5rem;"></div>
+        <button type="button" class="mobile-menu-toggle" aria-label="Toggle navigation menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main style="padding: 2.5rem 0 5rem;">
+    <div class="container">
+      <!-- Admin Header Banner -->
+      <section class="admin-header-card">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap; margin-bottom: 0.4rem;">
+            <span class="badge badge-admin">Main Admin Portal</span>
+            <span id="admin-account-label" style="font-size: 0.875rem; color: var(--text-secondary);">Verifying administrator session...</span>
+          </div>
+          <h1 style="font-size: 1.875rem; font-weight: 800; color: var(--text-primary); margin: 0;">
+            Campus Lost &amp; Found Management
+          </h1>
+          <p style="font-size: 0.9375rem; color: var(--text-secondary); margin-top: 0.3rem;">
+            Review, edit, update status, or permanently remove any Lost &amp; Found report across <span class="institution-name">MAWTS Institute of Technology</span>.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button type="button" id="admin-btn-refresh" class="btn btn-outline btn-sm">Refresh Data</button>
+          <a href="post.html" class="btn btn-primary btn-sm">+ New Report</a>
+        </div>
+      </section>
+
+      <!-- Admin Overview Metrics -->
+      <section class="admin-stats-grid" aria-label="Admin Statistics">
+        <div class="admin-stat-card">
+          <div class="admin-stat-label">Total Reports</div>
+          <div id="admin-stat-total" class="admin-stat-value">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-label">Lost Items</div>
+          <div id="admin-stat-lost" class="admin-stat-value" style="color: var(--status-lost-text);">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-label">Found Items</div>
+          <div id="admin-stat-found" class="admin-stat-value" style="color: var(--status-found-text);">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-label">Returned</div>
+          <div id="admin-stat-returned" class="admin-stat-value" style="color: var(--status-returned-text);">0</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-label">Verified Claims</div>
+          <div id="admin-stat-claims" class="admin-stat-value" style="color: var(--primary-600);">0</div>
+        </div>
+      </section>
+
+      <!-- Section Tabs -->
+      <div class="admin-tabs">
+        <button type="button" class="btn btn-sm admin-section-tab active" data-section="items">All Lost &amp; Found Reports</button>
+        <button type="button" class="btn btn-sm admin-section-tab" data-section="claims">Verified Claims Log</button>
+      </div>
+
+      <!-- TAB 1: All Lost & Found Reports -->
+      <section id="admin-section-items">
+        <!-- Search & Filters -->
+        <div class="admin-toolbar">
+          <div style="flex: 1 1 260px;">
+            <label class="form-label" for="admin-filter-search" style="font-size: 0.75rem;">Search Reports</label>
+            <input type="text" id="admin-filter-search" class="form-control" placeholder="Search title, location, poster name or email...">
+          </div>
+
+          <div style="min-width: 140px;">
+            <label class="form-label" for="admin-filter-type" style="font-size: 0.75rem;">Type</label>
+            <select id="admin-filter-type" class="form-select">
+              <option value="all">All Types</option>
+              <option value="lost">Lost</option>
+              <option value="found">Found</option>
+            </select>
+          </div>
+
+          <div style="min-width: 150px;">
+            <label class="form-label" for="admin-filter-status" style="font-size: 0.75rem;">Status</label>
+            <select id="admin-filter-status" class="form-select">
+              <option value="all">All Statuses</option>
+              <option value="open">Open</option>
+              <option value="claimed">Claimed</option>
+              <option value="returned">Returned</option>
+              <option value="archived">Archived</option>
+            </select>
+          </div>
+
+          <div style="min-width: 150px;">
+            <label class="form-label" for="admin-filter-category" style="font-size: 0.75rem;">Category</label>
+            <select id="admin-filter-category" class="form-select">
+              <option value="all">All Categories</option>
+              <option value="Bag">Bag</option>
+              <option value="Phone">Phone</option>
+              <option value="ID Card">ID Card</option>
+              <option value="Books">Books</option>
+              <option value="Keys">Keys</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div style="align-self: flex-end;">
+            <button type="button" id="admin-btn-reset" class="btn btn-outline" style="height: 42px;">Reset</button>
+          </div>
+        </div>
+
+        <div id="admin-results-count" style="font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.75rem;">
+          Loading all campus reports...
+        </div>
+
+        <!-- Items Table -->
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Type</th>
+                <th>Location &amp; Date</th>
+                <th>Reported By &amp; Contact</th>
+                <th>Status</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-items-tbody">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 2.5rem; color: var(--text-muted);">Loading items...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 2: Verified Claims Log -->
+      <section id="admin-section-claims" style="display: none;">
+        <div class="admin-table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Finder</th>
+                <th>Verified Claimer &amp; Contact</th>
+                <th>Claim Status</th>
+                <th>Verified Date</th>
+              </tr>
+            </thead>
+            <tbody id="admin-claims-tbody">
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 2.5rem; color: var(--text-muted);">Loading claims...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- MODAL: Admin Quick Status Change -->
+  <div id="admin-modal-status" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="admin-status-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="admin-status-title" class="modal-title">Change Report Status</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="admin-modal-status" aria-label="Close modal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+        Report: <strong id="admin-status-item-title" style="color: var(--text-primary);">Item Title</strong>
+      </p>
+
+      <div class="form-group">
+        <label class="form-label" for="admin-status-select">Status</label>
+        <select id="admin-status-select" class="form-select">
+          <option value="open">Open (Active &amp; Searchable)</option>
+          <option value="claimed">Claimed (Verified / Pending Pickup)</option>
+          <option value="returned">Returned (Safely Returned)</option>
+          <option value="archived">Archived (Closed)</option>
+        </select>
+        <span class="form-hint">Marking a Found item as Returned automatically credits the finder +50 points once.</span>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" data-close-modal="admin-modal-status">Cancel</button>
+        <button type="button" id="admin-btn-save-status" class="btn btn-primary">Save Status</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Admin Full Edit Item -->
+  <div id="admin-modal-edit" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="admin-edit-title">
+    <div class="modal-content" style="max-width: 660px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h3 id="admin-edit-title" class="modal-title">Edit Lost / Found Report</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="admin-modal-edit" aria-label="Close modal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div id="admin-edit-error" style="display: none; background-color: var(--danger-bg); color: var(--danger-text); border: 1px solid var(--danger-border); border-radius: var(--radius-md); padding: 0.75rem 1rem; font-size: 0.875rem; margin-bottom: 1rem;"></div>
+
+      <form id="admin-edit-form" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="admin-edit-item-title">Title</label>
+          <input type="text" id="admin-edit-item-title" name="title" class="form-control" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="admin-edit-type">Type</label>
+            <select id="admin-edit-type" name="type" class="form-select">
+              <option value="lost">Lost</option>
+              <option value="found">Found</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="admin-edit-category">Category</label>
+            <select id="admin-edit-category" name="category" class="form-select">
+              <option value="Bag">Bag</option>
+              <option value="Phone">Phone</option>
+              <option value="ID Card">ID Card</option>
+              <option value="Books">Books</option>
+              <option value="Keys">Keys</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="admin-edit-status">Status</label>
+            <select id="admin-edit-status" name="status" class="form-select">
+              <option value="open">Open</option>
+              <option value="claimed">Claimed</option>
+              <option value="returned">Returned</option>
+              <option value="archived">Archived</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="admin-edit-location">Location</label>
+            <input type="text" id="admin-edit-location" name="location" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="admin-edit-date">Incident Date</label>
+            <input type="date" id="admin-edit-date" name="item_date" class="form-control" required>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="admin-edit-phone">Contact Phone</label>
+            <input type="tel" id="admin-edit-phone" name="contact_phone" class="form-control" placeholder="Uses poster profile phone if blank">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="admin-edit-email">Contact Email</label>
+            <input type="email" id="admin-edit-email" name="contact_email" class="form-control" placeholder="Uses poster account email if blank">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="admin-edit-description">Description</label>
+          <textarea id="admin-edit-description" name="description" class="form-textarea" required></textarea>
+        </div>
+
+        <!-- Found-only verification fields -->
+        <div id="admin-edit-verify-group" style="display: none; background-color: var(--bg-surface-alt); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1rem;">
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--status-found-text); margin-bottom: 0.75rem;">
+            Found Item Secret Verification Challenge
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="admin-edit-verify-question">Secret Question</label>
+            <input type="text" id="admin-edit-verify-question" name="verify_question" class="form-control" placeholder="Secret question shown to claimants">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="admin-edit-verify-answer">New Secret Answer (Optional)</label>
+            <input type="text" id="admin-edit-verify-answer" name="verify_answer" class="form-control" placeholder="Leave blank to keep existing hashed answer">
+            <span class="form-hint">If provided, the new answer is Bcrypt-hashed on the server. Required when converting a Lost item to Found.</span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" data-close-modal="admin-modal-edit">Cancel</button>
+          <button type="submit" id="admin-btn-save-edit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Admin Delete Confirmation -->
+  <div id="admin-modal-delete" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="admin-delete-title">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="admin-delete-title" class="modal-title" style="color: var(--danger-btn);">Delete Report Permanently</h3>
+        <button type="button" class="modal-close-btn" data-close-modal="admin-modal-delete" aria-label="Close modal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <p style="font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.5rem;">
+        Are you sure you want to permanently delete <strong id="admin-delete-item-title" style="color: var(--text-primary);">this report</strong>? All related claims and verification records will also be removed.
+      </p>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" data-close-modal="admin-modal-delete">Cancel</button>
+        <button type="button" id="admin-btn-confirm-delete" class="btn btn-danger">Delete Permanently</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 FindIt – <span class="institution-name">MAWTS Institute of Technology</span>. Main Admin Portal.
+        </div>
+        <div>
+          Group 3 Portal • Supervisor: <span class="footer-supervisor">Joy Debnath</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase JS SDK via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Core Configuration & Application Scripts -->
+  <script src="config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

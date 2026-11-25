@@ -39,14 +39,16 @@ BEGIN
     END;
 
     -- Upsert demo profiles
-    INSERT INTO public.profiles (id, full_name, phone, points, items_returned_count)
+    INSERT INTO public.profiles (id, full_name, email, phone, role, points, items_returned_count)
     VALUES 
-        (v_user1_id, 'Tanvir Hasan (Demo)', '+8801711000001', 350, 7),
-        (v_user2_id, 'Nusrat Jahan (Demo)', '+8801811000002', 150, 3),
-        (v_user3_id, 'Shahriar Kabir (Demo)', '+8801911000003', 100, 2),
-        (v_user4_id, 'Anika Tabassum (Demo)', '+8801611000004', 50, 1)
+        (v_user1_id, 'Tanvir Hasan (Demo)', 'demo.tanvir@mawts.edu.bd', '+8801711000001', 'student', 350, 7),
+        (v_user2_id, 'Nusrat Jahan (Demo)', 'demo.nusrat@mawts.edu.bd', '+8801811000002', 'student', 150, 3),
+        (v_user3_id, 'Shahriar Kabir (Demo)', 'demo.shahriar@mawts.edu.bd', '+8801911000003', 'student', 100, 2),
+        (v_user4_id, 'Anika Tabassum (Demo)', 'demo.anika@mawts.edu.bd', '+8801611000004', 'student', 50, 1)
     ON CONFLICT (id) DO UPDATE SET
         full_name = EXCLUDED.full_name,
+        email = EXCLUDED.email,
+        phone = EXCLUDED.phone,
         points = EXCLUDED.points,
         items_returned_count = EXCLUDED.items_returned_count;
 

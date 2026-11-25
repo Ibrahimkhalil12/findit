@@ -129,8 +129,68 @@
     // Timeline
     renderStatusTimeline(item.type, item.status);
 
-    // Verification Section for Found Items
+    // Lost Item Direct Contact vs Found Item Verification Challenge
+    renderLostContactSection(item);
     renderVerificationSection(item);
+  }
+
+  // --------------------------------------------------------------------------
+  // 3b. Lost Item Direct Contact Section
+  // --------------------------------------------------------------------------
+  function renderLostContactSection(item) {
+    const lostCard = document.getElementById('lost-contact-card');
+    if (!lostCard) return;
+
+    if (item.type !== 'lost') {
+      lostCard.style.display = 'none';
+      return;
+    }
+
+    lostCard.style.display = 'block';
+
+    const returnedNotice = document.getElementById('lost-returned-notice');
+    const detailsBox = document.getElementById('lost-contact-details');
+
+    if (item.status === 'returned') {
+      if (returnedNotice) returnedNotice.style.display = 'block';
+      if (detailsBox) detailsBox.style.display = 'none';
+      return;
+    }
+
+    if (returnedNotice) returnedNotice.style.display = 'none';
+    if (detailsBox) detailsBox.style.display = 'block';
+
+    const nameEl = document.getElementById('lost-owner-name');
+    const phoneEl = document.getElementById('lost-owner-phone');
+    const emailEl = document.getElementById('lost-owner-email');
+
+    if (nameEl) nameEl.textContent = item.poster_name || 'Campus Student';
+
+    if (phoneEl) {
+      if (item.contact_phone && item.contact_phone.trim()) {
+        const cleanPhone = item.contact_phone.trim();
+        phoneEl.textContent = cleanPhone;
+        phoneEl.href = `tel:${cleanPhone.replace(/\s+/g, '')}`;
+        phoneEl.style.pointerEvents = 'auto';
+      } else {
+        phoneEl.textContent = 'Not provided (use email)';
+        phoneEl.removeAttribute('href');
+        phoneEl.style.pointerEvents = 'none';
+      }
+    }
+
+    if (emailEl) {
+      if (item.contact_email && item.contact_email.trim()) {
+        const cleanEmail = item.contact_email.trim();
+        emailEl.textContent = cleanEmail;
+        emailEl.href = `mailto:${cleanEmail}`;
+        emailEl.style.pointerEvents = 'auto';
+      } else {
+        emailEl.textContent = 'Not provided';
+        emailEl.removeAttribute('href');
+        emailEl.style.pointerEvents = 'none';
+      }
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -428,6 +488,8 @@
         image_url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=800&q=80',
         status: 'open',
         poster_name: 'Tanvir Hasan (Demo)',
+        contact_phone: '+8801711000001',
+        contact_email: 'demo.tanvir@mawts.edu.bd',
         user_id: '00000000-0000-0000-0000-000000000001'
       },
       {

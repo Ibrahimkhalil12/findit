@@ -24,6 +24,21 @@
     initImageUpload();
     initFormSubmission();
     setDefaultDate();
+    await prefillContactDetails();
+  }
+
+  async function prefillContactDetails() {
+    const phoneInput = document.getElementById('contact-phone');
+    const emailInput = document.getElementById('contact-email');
+    if (!phoneInput && !emailInput) return;
+
+    const profile = window.FindItDB ? await window.FindItDB.getProfile() : null;
+    if (phoneInput && !phoneInput.value) {
+      phoneInput.value = (profile && profile.phone) || currentUser?.user_metadata?.phone || '';
+    }
+    if (emailInput && !emailInput.value) {
+      emailInput.value = (profile && profile.email) || currentUser?.email || '';
+    }
   }
 
   function setDefaultDate() {
@@ -41,21 +56,43 @@
     const verifySection = document.getElementById('found-verification-section');
     const verifyQuestionInput = document.getElementById('verify-question');
     const verifyAnswerInput = document.getElementById('verify-answer');
+    const contactHint = document.getElementById('contact-privacy-hint');
+
+    function applyTypeUI(selectedType) {
+      if (selectedType === 'found') {
+        if (verifySection) verifySection.style.display = 'block';
+        if (verifyQuestionInput) verifyQuestionInput.required = true;
+        if (verifyAnswerInput) verifyAnswerInput.required = true;
+        if (contactHint) {
+          contactHint.innerHTML = 'For <strong>Found Items</strong>, your phone number and email remain strictly <strong>hidden</strong> until the true owner answers your secret verification question correctly.';
+        }
+      } else {
+        if (verifySection) verifySection.style.display = 'none';
+        if (verifyQuestionInput) verifyQuestionInput.required = false;
+        if (verifyAnswerInput) verifyAnswerInput.required = false;
+        if (contactHint) {
+          contactHint.innerHTML = 'For <strong>Lost Items</strong>, your phone number and email are shown normally on the listing so anyone who finds your belonging can contact you directly.';
+        }
+      }
+    }
 
     typeInputs.forEach(input => {
       input.addEventListener('change', () => {
-        const selectedType = document.querySelector('input[name="item_type"]:checked').value;
-        if (selectedType === 'found') {
-          if (verifySection) verifySection.style.display = 'block';
-          if (verifyQuestionInput) verifyQuestionInput.required = true;
-          if (verifyAnswerInput) verifyAnswerInput.required = true;
-        } else {
-          if (verifySection) verifySection.style.display = 'none';
-          if (verifyQuestionInput) verifyQuestionInput.required = false;
-          if (verifyAnswerInput) verifyAnswerInput.required = false;
-        }
+        const checked = document.querySelector('input[name="item_type"]:checked');
+        if (checked) applyTypeUI(checked.value);
       });
     });
+
+    // Honor URL query parameter (?type=found or ?type=lost)
+    const params = new URLSearchParams(window.location.search);
+    const urlType = (params.get('type') || '').toLowerCase();
+    if (urlType === 'found' || urlType === 'lost') {
+      const targetRadio = document.querySelector(`input[name="item_type"][value="${urlType}"]`);
+      if (targetRadio) targetRadio.checked = true;
+    }
+
+    const initialChecked = document.querySelector('input[name="item_type"]:checked');
+    applyTypeUI(initialChecked ? initialChecked.value : 'lost');
   }
 
   // --------------------------------------------------------------------------
@@ -164,6 +201,20 @@
       const description = form.description.value.trim();
       const location = form.location.value.trim();
       const itemDate = form.item_date.value;
+      const contactPhoneInput = document.getElementById('contact-phone');
+      const contactEmailInput = document.getElementById('contact-email');
+      const contactPhone = contactPhoneInput ? contactPhoneInput.value.trim() : '';
+      const contactEmail = contactEmailInput ? contactEmailInput.value.trim() : '';
+
+      if (contactPhone && contactPhone.length < 7) {
+        showError(formErrorAlert, 'Please enter a valid contact phone number (at least 7 characters) or leave it blank.');
+        return;
+      }
+
+      if (contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) {
+        showError(formErrorAlert, 'Please enter a valid contact email address.');
+        return;
+      }
 
       let verifyQuestion = null;
       let verifyAnswer = null;
@@ -227,7 +278,9 @@
             p_item_date: itemDate,
             p_image_url: imageUrl,
             p_verify_question: verifyQuestion,
-            p_verify_answer: verifyAnswer
+            p_verify_answer: verifyAnswer,
+            p_contact_phone: contactPhone || null,
+            p_contact_email: contactEmail || null
           });
 
           if (error) throw error;

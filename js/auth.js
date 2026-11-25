@@ -46,8 +46,35 @@
     if (!window.FindItDB) return;
     const session = await window.FindItDB.getSession();
     if (session) {
+      if (destination === 'dashboard.html') {
+        const isAdmin = await window.FindItDB.isAdmin();
+        if (isAdmin) {
+          window.location.href = 'admin.html';
+          return;
+        }
+      }
       window.location.href = destination;
     }
+  }
+
+  async function requireAdmin() {
+    if (!window.FindItDB) return null;
+    const session = await window.FindItDB.getSession();
+    if (!session || !session.user) {
+      window.location.href = 'admin-login.html';
+      return null;
+    }
+
+    const isAdmin = await window.FindItDB.isAdmin();
+    if (!isAdmin) {
+      if (window.FindIt) {
+        window.FindIt.showToast('Access Denied: Admin privileges are required.', 'error');
+      }
+      window.location.href = 'admin-login.html?denied=1';
+      return null;
+    }
+
+    return session.user;
   }
 
   // --------------------------------------------------------------------------
@@ -89,9 +116,13 @@
 
         window.FindIt.showToast('Login successful! Welcome back.', 'success');
         
-        // Check redirect query param
+        // Check redirect query param (admins default to admin.html if no explicit redirect)
         const urlParams = new URLSearchParams(window.location.search);
-        const redirect = urlParams.get('redirect') || 'dashboard.html';
+        let redirect = urlParams.get('redirect');
+        if (!redirect) {
+          const isAdmin = await window.FindItDB.isAdmin();
+          redirect = isAdmin ? 'admin.html' : 'dashboard.html';
+        }
         
         setTimeout(() => {
           window.location.href = decodeURIComponent(redirect);
@@ -241,7 +272,8 @@
 
   window.FindItAuth = {
     requireAuth,
-    redirectIfAuth
+    redirectIfAuth,
+    requireAdmin
   };
 
 })(window);
